@@ -7,13 +7,12 @@ import (
 	"testing"
 )
 
-type (
-	Assert struct {
-		*testing.T
-	}
-)
+// Assert is the top level type and holds the testing instance
+type Assert struct {
+	*testing.T
+}
 
-// New Create a assert object that will use the given testing object
+// New Creates an assert object that will use the given testing instance
 func New(t *testing.T) *Assert {
 	return &Assert{
 		T: t,
@@ -40,7 +39,7 @@ func (a *Assert) log(args ...interface{}) {
 	}
 }
 
-// Fail forces the test to fail writting a log message if any arguments
+// Fail forces the test to fail writing a log message if any arguments
 // provided
 func (a *Assert) Fail(args ...interface{}) {
 	a.Helper()
@@ -89,7 +88,7 @@ func (a *Assert) IsTrue(b bool, args ...interface{}) {
 	}
 }
 
-// IsTrue asserts that the provided bool is false
+// IsFalse asserts that the provided bool is false
 func (a *Assert) IsFalse(b bool, args ...interface{}) {
 	if b {
 		a.Helper()
