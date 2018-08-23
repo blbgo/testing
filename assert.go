@@ -1,3 +1,4 @@
+// A testing assert tool for go.
 package assert
 
 import (

@@ -6,7 +6,9 @@ A testing assert tool for go.
 [![License](http://img.shields.io/badge/license-mit-blue.svg)](https://github.com/blbergwall/assert/blob/master/LICENSE.txt)
 
 ### Install
+```
 go get github.com/blbergwall/assert
+```
 
 ### Overview
 Provide a collection of assert and testing helper methods
