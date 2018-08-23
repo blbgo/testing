@@ -3,7 +3,6 @@ A testing assert tool for go.
 
 [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg)](http://godoc.org/github.com/blbergwall/assert)
 [![Go Report Card](https://goreportcard.com/badge/github.com/blbergwall/assert)](https://goreportcard.com/report/github.com/blbergwall/assert)
-[![Codecov](https://img.shields.io/codecov/c/github/blbergwall/assert.svg)](https://codecov.io/gh/blbergwall/assert)
 [![License](http://img.shields.io/badge/license-mit-blue.svg)](https://github.com/blbergwall/assert/blob/master/LICENSE.txt)
 
 ### Install
