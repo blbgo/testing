@@ -23,7 +23,7 @@ func TestATest(t *testing.T) {
 
 	result, err := methodUnderTest()
 	a.NoError(err)
-	a.AreEqual(5, result)
+	a.Equal(5, result)
 }
 ```
 

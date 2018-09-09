@@ -17,7 +17,7 @@ func New(tb testing.TB) *Assert {
 	return &Assert{TB: tb}
 }
 
-func (a *Assert) logIfSomthing(args ...interface{}) {
+func (a *Assert) logIf(args ...interface{}) {
 	if len(args) > 0 {
 		a.Log(args...)
 	}
@@ -27,16 +27,16 @@ func (a *Assert) logIfSomthing(args ...interface{}) {
 func (a *Assert) NoError(err error, args ...interface{}) {
 	if err != nil {
 		a.Helper()
-		a.logIfSomthing(args...)
+		a.logIf(args...)
 		a.Fatal(err)
 	}
 }
 
-// IsError asserts that the provided err is not nil
-func (a *Assert) IsError(err error, args ...interface{}) {
+// Error asserts that the provided err is not nil
+func (a *Assert) Error(err error, args ...interface{}) {
 	if err == nil {
 		a.Helper()
-		a.logIfSomthing(args...)
+		a.logIf(args...)
 		a.Fatal("Expected error but NO error!")
 	}
 }
@@ -53,8 +53,8 @@ func (a *Assert) ErrorContains(err error, substr string) {
 	}
 }
 
-// IsTrue asserts that the provided bool is true
-func (a *Assert) IsTrue(b bool, args ...interface{}) {
+// True asserts that the provided bool is true
+func (a *Assert) True(b bool, args ...interface{}) {
 	if !b {
 		a.Helper()
 		if len(args) > 0 {
@@ -65,24 +65,13 @@ func (a *Assert) IsTrue(b bool, args ...interface{}) {
 }
 
 // IsFalse asserts that the provided bool is false
-func (a *Assert) IsFalse(b bool, args ...interface{}) {
+func (a *Assert) False(b bool, args ...interface{}) {
 	if b {
 		a.Helper()
 		if len(args) > 0 {
 			a.Fatal(args...)
 		}
 		a.Fatal("Expected false but is true")
-	}
-}
-
-// IsNil asserts that the provided interface{} is nil
-func (a *Assert) IsNil(i interface{}, args ...interface{}) {
-	if i != nil {
-		a.Helper()
-		if len(args) > 0 {
-			a.Fatal(args...)
-		}
-		a.Fatal("Expected nil but is not nil")
 	}
 }
 
@@ -97,8 +86,19 @@ func (a *Assert) NotNil(i interface{}, args ...interface{}) {
 	}
 }
 
+// IsNil asserts that the provided interface{} is nil
+func (a *Assert) Nil(i interface{}, args ...interface{}) {
+	if i != nil {
+		a.Helper()
+		if len(args) > 0 {
+			a.Fatal(args...)
+		}
+		a.Fatal("Expected nil but is not nil")
+	}
+}
+
 // AreEqual asserts that the expect == actual
-func (a *Assert) AreEqual(expect interface{}, actual interface{}, args ...interface{}) {
+func (a *Assert) Equal(expect interface{}, actual interface{}, args ...interface{}) {
 	if expect != actual {
 		a.Helper()
 		if len(args) > 0 {
@@ -109,7 +109,7 @@ func (a *Assert) AreEqual(expect interface{}, actual interface{}, args ...interf
 }
 
 // AreNotEqual asserts that the expect != actual
-func (a *Assert) AreNotEqual(expect interface{}, actual interface{}, args ...interface{}) {
+func (a *Assert) NotEqual(expect interface{}, actual interface{}, args ...interface{}) {
 	if expect == actual {
 		a.Helper()
 		if len(args) > 0 {
@@ -122,7 +122,7 @@ func (a *Assert) AreNotEqual(expect interface{}, actual interface{}, args ...int
 // R1AndNoError is ment to be called with the results of a function that
 // returns 1 result and a posible error.  it fails if the error is not nil and
 // otherwise returns just the result.  So it can be used in a construct like:
-//   a.AreEqual(5, a.R1AndNoError(funcReturningIntAndError()))
+//   a.Equal(5, a.R1AndNoError(funcReturningIntAndError()))
 // this asserts first that funcReturningIntAndError did not return an error
 // and second that its first result is 5.
 func (a *Assert) R1AndNoError(r1 interface{}, err error) interface{} {
