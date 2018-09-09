@@ -5,11 +5,14 @@ import (
 	"testing"
 )
 
+func fiveNoError() (int, error) {
+	return 5, nil
+}
+
 func TestAllMethods(t *testing.T) {
 	a := New(t)
 
-	a.Log("Somthing to log, only printed if test fails")
-	a.Logf("Formated log, only %v if test fails", "printed")
+	a.Log("Can call testing.T methods.")
 	a.NoError(nil)
 	a.IsError(errors.New("This is an error!"))
 	a.ErrorContains(errors.New("This is an error!"), "error")
@@ -19,6 +22,7 @@ func TestAllMethods(t *testing.T) {
 	a.NotNil(a)
 	a.AreEqual(5, 5)
 	a.AreNotEqual(2, 4)
+	a.AreEqual(5, a.R1AndNoError(fiveNoError()))
 
 	// can't think of any way to test fail cases without failing awkward!
 }

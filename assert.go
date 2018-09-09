@@ -2,57 +2,31 @@
 package assert
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"testing"
 )
 
-// Assert is the top level type and holds the testing instance
-type Assert struct {
-	*testing.T
-}
+// Assert is a testing.T with assert functionality
+type Assert testing.T
 
 // New Creates an assert object that will use the given testing instance
 func New(t *testing.T) *Assert {
-	return &Assert{
-		T: t,
-	}
+	a := Assert(*t)
+	return &a
 }
 
-// Log writes to the testing log.  Will be printed only if the test fails
-// or the -test.v flag is set
-func (a *Assert) Log(args ...interface{}) {
-	a.Helper()
-	a.T.Log(args...)
-}
-
-// Logf writes to the testing log.  Will be printed only if the test fails or
-// the -test.v flag is set
-func (a *Assert) Logf(format string, args ...interface{}) {
-	a.Helper()
-	a.T.Logf(format, args...)
-}
-
-func (a *Assert) log(args ...interface{}) {
+func (a *Assert) logIfSomthing(args ...interface{}) {
 	if len(args) > 0 {
-		a.T.Log(args...)
+		a.Log(args...)
 	}
-}
-
-// Fail forces the test to fail writing a log message if any arguments
-// provided
-func (a *Assert) Fail(args ...interface{}) {
-	a.Helper()
-	a.log(args...)
-	a.Fatal(errors.New("Forced fail"))
 }
 
 // NoError asserts that the provided err is nil
 func (a *Assert) NoError(err error, args ...interface{}) {
 	if err != nil {
 		a.Helper()
-		a.log(args...)
+		a.logIfSomthing(args...)
 		a.Fatal(err)
 	}
 }
@@ -61,7 +35,7 @@ func (a *Assert) NoError(err error, args ...interface{}) {
 func (a *Assert) IsError(err error, args ...interface{}) {
 	if err == nil {
 		a.Helper()
-		a.log(args...)
+		a.logIfSomthing(args...)
 		a.Fatal("Expected error but NO error!")
 	}
 }
@@ -142,4 +116,19 @@ func (a *Assert) AreNotEqual(expect interface{}, actual interface{}, args ...int
 		}
 		a.Fatal(fmt.Sprintf("Expected not %v but is %v", expect, actual))
 	}
+}
+
+// R1AndNoError is ment to be called with the results of a function that
+// returns 1 result and a posible error.  it fails if the error is not nil and
+// otherwise returns just te result.  So it can be used in a construct like:
+//   a.AreEqual(5, a.R1AndNoError(funcReturningIntAndError()))
+// this asserts first that funcReturningIntAndError did not return an error
+// and second that its first result is 5.
+func (a *Assert) R1AndNoError(r1 interface{}, err error) interface{} {
+	if err != nil {
+		a.Helper()
+		a.Log("Expected no error but got error")
+		a.Fatal(err)
+	}
+	return r1
 }
