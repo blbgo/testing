@@ -7,13 +7,14 @@ import (
 	"testing"
 )
 
-// Assert is a testing.T with assert functionality
-type Assert testing.T
+// Assert is a testing.TB with assert functionality
+type Assert struct {
+	testing.TB
+}
 
 // New Creates an assert object that will use the given testing instance
-func New(t *testing.T) *Assert {
-	a := Assert(*t)
-	return &a
+func New(tb testing.TB) *Assert {
+	return &Assert{TB: tb}
 }
 
 func (a *Assert) logIfSomthing(args ...interface{}) {
@@ -120,7 +121,7 @@ func (a *Assert) AreNotEqual(expect interface{}, actual interface{}, args ...int
 
 // R1AndNoError is ment to be called with the results of a function that
 // returns 1 result and a posible error.  it fails if the error is not nil and
-// otherwise returns just te result.  So it can be used in a construct like:
+// otherwise returns just the result.  So it can be used in a construct like:
 //   a.AreEqual(5, a.R1AndNoError(funcReturningIntAndError()))
 // this asserts first that funcReturningIntAndError did not return an error
 // and second that its first result is 5.
